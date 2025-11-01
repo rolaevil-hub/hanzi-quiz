@@ -1,358 +1,226 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <title>國字字詞複習（線上版｜可分享連結）</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body{font-family:"Microsoft JhengHei",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f7f7f7;margin:0;color:#222}
-    header{padding:16px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-    h1{margin:0;color:#4CAF50}
-    main{max-width:980px;margin:20px auto;padding:0 12px 60px}
-    .card{background:#fff;padding:16px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin-bottom:16px}
-    textarea{width:100%;height:140px;padding:8px;font-size:14px;border:1px solid #ccc;border-radius:10px}
-    input[type="text"]{width:100%;padding:8px;border:1px solid #ccc;border-radius:10px}
-    .btn{background:#4CAF50;color:#fff;padding:10px 14px;border:none;border-radius:10px;margin:6px 0;cursor:pointer}
-    .btn:hover{filter:brightness(.95)}
-    .btn.muted{background:#eee;color:#333}
-    .btn.gray{background:#888}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .right{margin-left:auto}
-    #options{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
-    .opt{padding:12px;border:1.5px solid #e5e5e5;border-radius:12px;background:#fff;text-align:center;cursor:pointer}
-    .opt:hover{border-color:#ccc}
-    .opt.correct{border-color:#2ecc71;background:#effaf3}
-    .opt.wrong{border-color:#e74c3c;background:#fff2f1}
-    .muted{color:#666;font-size:13px}
-    #quizSection{display:none}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px solid #eee;text-align:center}
-    th{background:#fafafa}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media (max-width:860px){.grid-2{grid-template-columns:1fr}}
-    /* 成績彈窗 */
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:20}
-    .modal{width:min(520px,92vw);background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:20px;text-align:center}
-    .score{font-size:28px;margin:6px 0 12px}
-    .badge{display:inline-block;background:#eef7ef;color:#185c27;border-radius:999px;padding:6px 12px;font-weight:700}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>倍數判斷線上練習</title>
+<style>
+body {
+    font-family: "Microsoft JhengHei", "PingFang TC", Arial, sans-serif;
+    background-color: #f4f8f9;
+    color: #333;
+    line-height: 1.8;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+h1 {
+    text-align: center;
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 10px;
+}
+h2 {
+    color: #007bff;
+    background-color: #e7f3ff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+h3 {
+    color: #1a6a3a;
+    border-left: 5px solid #28a745;
+    padding-left: 10px;
+    margin-top: 25px;
+}
+.rule-section {
+    margin-bottom: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+.rule-description, .example {
+    background-color: #fdfdee;
+    border: 1px solid #f0e68c;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+.question {
+    padding: 15px;
+    margin-bottom: 12px;
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 1.1em;
+}
+.question-text { margin-right: 20px; font-weight: 500; }
+.question label { margin: 0 10px; cursor: pointer; }
+.question input[type="radio"] {
+    margin-right: 5px; transform: scale(1.2); vertical-align: middle;
+}
+.question input[type="text"] {
+    font-size: 1em; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+    margin: 5px 10px 5px 0; width: 200px;
+}
+.check-btn {
+    background-color: #007bff; color: white; border: none;
+    padding: 8px 15px; border-radius: 5px; cursor: pointer;
+    font-weight: bold;
+}
+.check-btn:hover { background-color: #0056b3; }
+.feedback { margin-left: 15px; font-weight: bold; font-size: 1.1em; }
+.feedback.correct { color: #28a745; }
+.feedback.incorrect { color: #dc3545; }
+#reset-btn, #score-btn {
+    display: block; margin: 20px auto;
+    border: none; padding: 12px 25px; border-radius: 5px;
+    cursor: pointer; font-size: 1.1em; font-weight: bold; color: white;
+}
+#reset-btn { background-color: #dc3545; }
+#reset-btn:hover { background-color: #c82333; }
+#score-btn { background-color: #17a2b8; }
+#score-btn:hover { background-color: #138496; }
+#score-output {
+    text-align: center; font-weight: bold;
+    font-size: 1.2em; color: #0056b3;
+}
+@media (max-width:600px){
+  .question { flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>國字字詞複習</h1>
-    <div class="muted">支援網址帶題庫｜隨機出題｜可愛音效｜成績記錄</div>
-  </header>
+<div class="container">
+    <h1>🔢 倍數判斷線上練習</h1>
+    <p>請根據規則，判斷下列數字。完成選擇後，按下「檢查」按鈕看看你是否答對了！</p>
+    <button id="reset-btn">全部重來</button>
 
-  <main>
-    <!-- 題庫輸入 / 產生分享連結 -->
-    <section class="card" id="inputSection">
-      <h3 style="margin-top:0">題庫設定</h3>
-      <p class="muted">每行：「<span class="mono">詞語 空格 注音</span>」，例如：<span class="mono">掙扎 ㄓㄥ ㄓㄚˊ</span></p>
-      <textarea id="wordInput">掙扎 ㄓㄥ ㄓㄚˊ
-崢嶸 ㄓㄥ ㄖㄨㄥˊ
-擅自 ㄕㄢˋ ㄗˋ
-顫抖 ㄓㄢˋ ㄉㄡˇ
-囑咐 ㄓㄨˇ ㄈㄨˋ</textarea>
-      <div class="row">
-        <button class="btn" onclick="loadCustomWords()">載入題庫（開始練習）</button>
-        <label class="muted right"><input type="checkbox" id="soundToggle" checked> 🔈 啟用音效</label>
-      </div>
-      <hr style="border:none;border-top:1px dashed #ddd;margin:12px 0">
-      <div class="row">
-        <button class="btn muted" onclick="makeShareLink()">產生分享連結（內嵌題庫）</button>
-        <input type="text" id="shareUrl" placeholder="產生後會出現連結，可複製分享" readonly>
-        <button class="btn gray" onclick="copyShare()">複製</button>
-      </div>
-      <div>
-        <p class="muted" style="margin:6px 0 4px"><b>或</b> 使用外部檔案網址（<span class="mono">?src=</span>）</p>
-        <input type="text" id="srcUrl" placeholder="貼上題庫文字檔網址，例如 GitHub Raw / Gist Raw / 學校網站純文字檔" />
-        <div class="row">
-          <button class="btn muted" onclick="loadFromSrc()">用網址載入題庫</button>
-          <span class="muted">網址需可公開存取的純文字（每行一題）</span>
+    <!-- 範例題區（示意保留原結構） -->
+    <div class="rule-section">
+        <h2>二、2的倍數簡易判斷法</h2>
+        <p class="rule-description">個位數是0、2、4、6、8的整數，是2的倍數。</p>
+        <div class="question" data-answer="not" data-id="q1_1">
+            <span class="question-text">1. 55</span>
+            <label><input type="radio" name="q1_1" value="is">是</label>
+            <label><input type="radio" name="q1_1" value="not">不是</label>
+            <button class="check-btn">檢查</button><span class="feedback"></span>
         </div>
-      </div>
-    </section>
-
-    <!-- 測驗 -->
-    <section class="card" id="quizSection">
-      <div class="row">
-        <h3 id="question" style="margin:0">題目</h3>
-        <label class="muted right"><input type="checkbox" id="soundToggle2" checked> 🔈 音效</label>
-      </div>
-      <div id="options"></div>
-      <p id="feedback" class="muted"></p>
-      <div class="row">
-        <button class="btn" id="nextBtn" onclick="nextQuestion()">下一題</button>
-        <p class="muted right">分數：<span id="score">0</span></p>
-      </div>
-      <button class="btn muted" onclick="showInput()">重新載入題庫</button>
-    </section>
-
-    <!-- 本輪摘要＋歷次成績 -->
-    <section class="grid-2">
-      <div class="card">
-        <h3 style="margin-top:0">本次摘要</h3>
-        <div id="summary" class="muted">載入題庫後開始作答，完成會在此顯示成績。</div>
-      </div>
-      <div class="card">
-        <h3 style="margin-top:0">歷次成績（最近 10 次）</h3>
-        <div class="row" style="margin-bottom:8px">
-          <div class="muted">最佳：<span id="bestBadge">—</span></div>
-          <div class="right">
-            <button class="btn muted" onclick="clearRecords()">清除成績</button>
-          </div>
+        <div class="question fill-in" data-answer="1,4,7" data-id="q3_fill">
+            <span class="question-text">若「23□」是3的倍數，□＝？</span>
+            <input type="text" class="fill-in-answer" placeholder="填入所有可能數字,用逗號,分隔">
+            <button class="check-btn">檢查</button><span class="feedback"></span>
         </div>
-        <div id="recordsWrap" class="muted">尚無紀錄</div>
-      </div>
-    </section>
-  </main>
-
-  <!-- 結束分數視窗 -->
-  <div class="overlay" id="endOverlay" role="dialog" aria-modal="true">
-    <div class="modal">
-      <h2 style="margin:6px 0 2px">本輪完成！</h2>
-      <div class="score" id="scoreLine">得分 0/0（0%）</div>
-      <div id="timeLine" class="muted" style="margin-bottom:12px">耗時 0 秒</div>
-      <div id="badgeLine" class="badge">加油！再試一次</div>
-      <div style="margin-top:14px">
-        <button class="btn" onclick="closeOverlayAndRestart()">再來一輪（隨機）</button>
-      </div>
     </div>
-  </div>
+
+    <button id="score-btn">查看分數</button>
+    <p id="score-output"></p>
+</div>
 
 <script>
-/* ====== 工具：URL 參數 ====== */
-function getParam(name){
-  const url = new URL(location.href);
-  return url.searchParams.get(name);
-}
-function setParam(name,value){
-  const url = new URL(location.href);
-  if(value==null) url.searchParams.delete(name);
-  else url.searchParams.set(name,value);
-  history.replaceState(null, "", url.toString());
-}
+document.addEventListener('DOMContentLoaded', function() {
 
-/* ====== 狀態 ====== */
-let quizData = [];
-let currentIndex = 0;
-let score = 0;
-let answered = false;
-let startTs = 0;
-
-/* ====== 成績記錄（localStorage） ====== */
-const STORAGE_KEY = "hanziQuizRecords_online_v1";
-function loadRecords(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); }catch{ return []; } }
-function saveRecord(r){ const a=loadRecords(); a.unshift(r); while(a.length>10) a.pop(); localStorage.setItem(STORAGE_KEY, JSON.stringify(a)); }
-function bestOf(rs){ if(!rs.length) return null; return rs.reduce((b,r)=>(r.correct/r.total)>(b.correct/b.total)?r:b); }
-function renderRecords(){
-  const records = loadRecords();
-  const wrap = document.getElementById("recordsWrap");
-  if(!records.length){ wrap.textContent="尚無紀錄"; document.getElementById("bestBadge").textContent="—"; return; }
-  wrap.innerHTML = `<table><thead><tr><th>時間</th><th>得分</th><th>正確率</th><th>秒數</th></tr></thead><tbody>${
-    records.map(r=>{
-      const dt=new Date(r.time).toLocaleString();
-      const acc=Math.round((r.correct/r.total)*100);
-      return `<tr><td>${dt}</td><td>${r.correct}/${r.total}</td><td>${acc}%</td><td>${r.duration}s</td></tr>`;
-    }).join("")
-  }</tbody></table>`;
-  const best = bestOf(records);
-  if(best){
-    const acc = Math.round((best.correct/best.total)*100);
-    document.getElementById("bestBadge").textContent = `${best.correct}/${best.total}（${acc}%）於 ${new Date(best.time).toLocaleString()}`;
+  // --- 儲存與載入功能 ---
+  const STORAGE_KEY = "multiple_quiz_progress";
+  function saveProgress() {
+      const data = {};
+      document.querySelectorAll('.question').forEach(q => {
+          const id = q.dataset.id;
+          if(!id) return;
+          if(q.classList.contains('fill-in')){
+              const val = q.querySelector('.fill-in-answer').value;
+              data[id] = { type:'text', value: val };
+          } else {
+              const sel = q.querySelector('input[type="radio"]:checked');
+              data[id] = { type:'radio', value: sel ? sel.value : "" };
+          }
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
-}
-function clearRecords(){ localStorage.removeItem(STORAGE_KEY); renderRecords(); }
-
-/* ====== 可愛音效（同前一版） ====== */
-let actx=null;
-function ensureAudio(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); }
-function soundEnabled(){ const a=document.getElementById('soundToggle')?.checked ?? true; const b=document.getElementById('soundToggle2')?.checked ?? true; return a&&b; }
-function cuteTone(freq=523.25, duration=0.16, {gain=0.22, lp=7500, vibrato=6, depth=8, when=0}={}){
-  if(!soundEnabled()) return;
-  ensureAudio();
-  const t0=actx.currentTime+when;
-  const out=actx.createGain(), filt=actx.createBiquadFilter();
-  filt.type="lowpass"; filt.frequency.value=lp;
-  out.gain.setValueAtTime(0.0001,t0);
-  const o1=actx.createOscillator(); o1.type="triangle"; o1.frequency.setValueAtTime(freq,t0);
-  const o2=actx.createOscillator(); o2.type="sine";     o2.frequency.setValueAtTime(freq*2,t0); o2.detune.value=+8;
-  const lfo=actx.createOscillator(); lfo.type="sine"; lfo.frequency.value=vibrato;
-  const lfoG=actx.createGain(); lfoG.gain.value=depth; lfo.connect(lfoG); lfoG.connect(o1.detune); lfoG.connect(o2.detune);
-  out.gain.linearRampToValueAtTime(gain, t0+0.02);
-  out.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain*0.5), t0 + duration*0.6);
-  out.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
-  o1.connect(filt); o2.connect(filt); filt.connect(out).connect(actx.destination);
-  o1.start(t0); o2.start(t0); lfo.start(t0);
-  const stopAt=t0+duration+0.03; o1.stop(stopAt); o2.stop(stopAt); lfo.stop(stopAt);
-}
-function correctFx(){ cuteTone(783.99,0.15,{gain:0.22}); cuteTone(1046.50,0.17,{gain:0.20, when:0.12}); }
-function wrongFx(){ cuteTone(329.63,0.18,{gain:0.18, lp:5200}); cuteTone(261.63,0.20,{gain:0.16, lp:4800, when:0.12}); }
-function finishFx(){ cuteTone(1046.50,0.14,{gain:0.23}); cuteTone(1318.51,0.14,{gain:0.22, when:0.11}); cuteTone(1760.00,0.18,{gain:0.21, when:0.22}); cuteTone(2093.00,0.16,{gain:0.16, when:0.38}); }
-
-/* ====== 題庫處理 ====== */
-function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
-function randomDistractors(correct){
-  const b=["ㄅ","ㄆ","ㄇ","ㄈ","ㄉ","ㄊ","ㄋ","ㄌ","ㄍ","ㄎ","ㄏ","ㄐ","ㄑ","ㄒ","ㄓ","ㄔ","ㄕ","ㄖ","ㄗ","ㄘ","ㄙ","ㄚ","ㄛ","ㄜ","ㄝ","ㄞ","ㄟ","ㄠ","ㄡ","ㄢ","ㄣ","ㄤ","ㄥ","ㄦ","ˇ","ˋ","ˊ","˙"];
-  const d=[]; while(d.length<3){ let r=""; for(let i=0;i<correct.length;i++){ r+= (correct[i]===" "?" ": b[Math.floor(Math.random()*b.length)]); } if(!d.includes(r)&&r!==correct) d.push(r); }
-  return d;
-}
-function parseLinesToQuiz(lines){
-  return lines.map(line=>{
-    const parts=line.trim().split(/\s+/);
-    const word=parts[0]; const correct=parts.slice(1).join(" ");
-    const opts=[correct, ...randomDistractors(correct)];
-    return {word, correct, options: shuffle(opts)};
-  });
-}
-
-/* ====== 作答流程 ====== */
-let TOTAL=0;
-function loadCustomWords(){
-  document.getElementById('soundToggle2').checked = document.getElementById('soundToggle').checked;
-  const text=document.getElementById("wordInput").value.trim();
-  const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
-  quizData = shuffle(parseLinesToQuiz(lines));
-  startQuiz();
-}
-async function loadFromSrc(){
-  const url=document.getElementById("srcUrl").value.trim();
-  if(!url){ alert("請先貼上題庫文字檔網址"); return; }
-  await loadFromSrcUrl(url);
-}
-async function loadFromSrcUrl(url){
-  try{
-    const res = await fetch(url, {cache:"no-store"});
-    if(!res.ok){ throw new Error("無法讀取遠端題庫"); }
-    const text = await res.text();
-    const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-    quizData = shuffle(parseLinesToQuiz(lines));
-    startQuiz();
-  }catch(e){
-    alert("讀取題庫失敗（可能是網址無法公開存取或 CORS 限制）。\n建議使用 GitHub Raw / Gist Raw / 學校網站純文字檔。");
-    console.error(e);
+  function loadProgress() {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      Object.entries(data).forEach(([id, item])=>{
+          const q = document.querySelector(`[data-id="${id}"]`);
+          if(!q) return;
+          if(item.type === 'text'){
+              q.querySelector('.fill-in-answer').value = item.value || "";
+          } else if(item.type === 'radio' && item.value){
+              const r = q.querySelector(`input[type="radio"][value="${item.value}"]`);
+              if(r) r.checked = true;
+          }
+      });
   }
-}
-function startQuiz(){
-  currentIndex=0; score=0; answered=false;
-  TOTAL=quizData.length;
-  document.getElementById("score").textContent=score;
-  document.getElementById("quizSection").style.display="block";
-  document.getElementById("inputSection").style.display="none";
-  document.getElementById("summary").textContent="作答進行中…";
-  startTs=Date.now();
-  loadQuestion();
-}
-function showInput(){
-  document.getElementById("quizSection").style.display="none";
-  document.getElementById("inputSection").style.display="block";
-  document.getElementById('soundToggle').checked = document.getElementById('soundToggle2').checked;
-}
-function loadQuestion(){
-  answered=false;
-  const q=quizData[currentIndex];
-  document.getElementById("question").textContent=`「${q.word}」的正確注音是？";
-  document.getElementById("feedback").textContent="";
-  const optionsDiv=document.getElementById("options");
-  optionsDiv.innerHTML="";
-  shuffle(q.options).forEach(opt=>{
-    const btn=document.createElement("button");
-    btn.className="opt"; btn.textContent=opt;
-    btn.onclick=()=>checkAnswer(opt,q.correct,btn);
-    optionsDiv.appendChild(btn);
-  });
-}
-function checkAnswer(selected, correct, btn){
-  if(answered) return; answered=true;
-  document.querySelectorAll(".opt").forEach(b=>{
-    if(b.textContent===correct) b.classList.add("correct");
-    else if(b===btn) b.classList.add("wrong");
-    b.disabled=true;
-  });
-  if(selected===correct){ document.getElementById("feedback").textContent="✅ 答對了！"; score++; document.getElementById("score").textContent=score; correctFx(); }
-  else{ document.getElementById("feedback").textContent=`❌ 答錯了，正確答案是：${correct}`; wrongFx(); }
-}
-function nextQuestion(){
-  if(!answered) return;
-  currentIndex++;
-  if(currentIndex>=quizData.length){ finishQuiz(); }
-  else{ loadQuestion(); }
-}
-function finishQuiz(){
-  const duration=Math.round((Date.now()-startTs)/1000);
-  const acc=Math.round((score/TOTAL)*100);
-  document.getElementById('scoreLine').textContent=`得分 ${score}/${TOTAL}（${acc}%）`;
-  document.getElementById('timeLine').textContent=`耗時 ${duration} 秒`;
-  const badge=document.getElementById('badgeLine');
-  badge.textContent = acc===100 ? "滿分！太讚了！" : acc>=80 ? "表現很棒，繼續保持！" : "加油！再練一次更熟！";
-  document.getElementById('endOverlay').style.display='flex';
-  finishFx();
-  document.getElementById("summary").textContent=`本輪完成：${score}/${TOTAL}（${acc}%），耗時 ${duration} 秒。`;
-  saveRecord({time:Date.now(), correct:score, total:TOTAL, duration});
-  renderRecords();
-}
-function closeOverlayAndRestart(){
-  document.getElementById('endOverlay').style.display='none';
-  quizData = shuffle(quizData);
-  currentIndex=0; score=0; document.getElementById("score").textContent=score;
-  startTs=Date.now(); loadQuestion();
-}
 
-/* ====== 產生分享連結 ====== */
-function base64urlEncode(str){
-  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-}
-function base64urlDecode(str){
-  str=str.replace(/-/g,'+').replace(/_/g,'/'); const pad=str.length%4? '='.repeat(4-(str.length%4)) : ''; return decodeURIComponent(escape(atob(str+pad)));
-}
-function makeShareLink(){
-  const raw=document.getElementById("wordInput").value.trim();
-  if(!raw){ alert("請先在上方輸入題庫文字"); return; }
-  const enc=base64urlEncode(raw);
-  const url=new URL(location.href);
-  url.searchParams.delete("src");
-  url.searchParams.set("data", enc);
-  const final=url.toString();
-  const box=document.getElementById("shareUrl");
-  box.value=final;
-  box.focus(); box.select();
-}
-function copyShare(){
-  const box=document.getElementById("shareUrl");
-  if(!box.value){ alert("請先產生分享連結"); return; }
-  navigator.clipboard.writeText(box.value).then(()=>{
-    alert("已複製分享連結！");
-  }).catch(()=>{
-    box.focus(); box.select();
-    alert("已選取連結，請手動複製。");
-  });
-}
-
-/* ====== 啟動：支援 ?data= 與 ?src= ====== */
-window.addEventListener("DOMContentLoaded", async () => {
-  renderRecords();
-  const data = getParam("data");
-  const src  = getParam("src");
-  const auto = getParam("auto"); // ?auto=1 自動開始（給分享連結用）
-
-  if(data){
-    try{
-      const text = base64urlDecode(data);
-      const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-      quizData = shuffle(parseLinesToQuiz(lines));
-      if(auto==="1"){
-        startQuiz();
-      }else{
-        document.getElementById("wordInput").value = text;
-      }
-    }catch(e){
-      console.error(e);
-      alert("讀取連結中的題庫失敗。");
-    }
-  }else if(src){
-    await loadFromSrcUrl(src);
+  // --- 答題判斷 ---
+  function normalizeAnswer(input){
+      return input.replace(/，/g,',').split(',')
+          .map(s=>s.trim()).filter(Boolean).sort().join(',');
   }
+
+  document.querySelectorAll('.check-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+          const q=btn.parentElement;
+          const ans=q.dataset.answer;
+          const fb=q.querySelector('.feedback');
+          let correct=false;
+          if(q.classList.contains('fill-in')){
+              const val=normalizeAnswer(q.querySelector('.fill-in-answer').value);
+              if(!val){fb.textContent='請填入答案';fb.className='feedback incorrect';return;}
+              correct=(val===ans);
+          }else{
+              const sel=q.querySelector('input[type="radio"]:checked');
+              if(!sel){fb.textContent='請選擇答案';fb.className='feedback incorrect';return;}
+              correct=(sel.value===ans);
+          }
+          fb.textContent=correct?'答對了！🎉':'再試一次！💪';
+          fb.className='feedback '+(correct?'correct':'incorrect');
+          saveProgress(); // ⬅️ 每次檢查後儲存進度
+      });
+  });
+
+  // --- 即時儲存輸入 ---
+  document.querySelectorAll('input[type="radio"], input[type="text"]').forEach(el=>{
+      el.addEventListener('input', saveProgress);
+      el.addEventListener('change', saveProgress);
+  });
+
+  // --- 全部重來 ---
+  document.getElementById('reset-btn').addEventListener('click',()=>{
+      localStorage.removeItem(STORAGE_KEY);
+      document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+      document.querySelectorAll('input[type="text"]').forEach(i=>i.value='');
+      document.querySelectorAll('.feedback').forEach(fb=>{fb.textContent='';fb.className='feedback';});
+      document.getElementById('score-output').textContent='';
+  });
+
+  // --- 查看分數 ---
+  document.getElementById('score-btn').addEventListener('click',()=>{
+      const qs=document.querySelectorAll('.question');
+      let c=0,t=qs.length;
+      qs.forEach(q=>{
+          const a=q.dataset.answer;
+          if(q.classList.contains('fill-in')){
+              if(normalizeAnswer(q.querySelector('.fill-in-answer').value)===a)c++;
+          }else{
+              const s=q.querySelector('input[type="radio"]:checked');
+              if(s&&s.value===a)c++;
+          }
+      });
+      document.getElementById('score-output').textContent=`共 ${t} 題，答對 ${c} 題，正確率 ${(c/t*100).toFixed(0)}%`;
+  });
+
+  // --- 啟動時載入舊進度 ---
+  loadProgress();
+
 });
 </script>
 </body>
